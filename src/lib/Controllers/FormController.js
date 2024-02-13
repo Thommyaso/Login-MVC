@@ -1,19 +1,22 @@
 import AbstractController from '../Abstracts/controller';
+import Service from '../Services/Service';
 
 class FormController extends AbstractController {
     constructor(model) {
         super(model);
-
+        this.service = new Service();
     }
 
     handleLoginData(data) {
         // server request needs to be set up here
-        console.log(data);
-        this.updateModel({
-            name: 'Alexander',
-            surname: 'Volkanowski',
-        });
-
+        this.service.login(data)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((res) => {
+                console.log(res);
+            });
+        // console.log(data);
     }
 
     updateModel(data) {
