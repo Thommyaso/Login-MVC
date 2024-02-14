@@ -3,10 +3,20 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const users = new Map([
     ['Thomas', 'abc012'],
 ]);
+
+app.use(
+    session({
+        secret: 'not a good secret',
+        cookie: {},
+        resave: false,
+        saveUninitialized: false,
+    }),
+);
 
 app.use(cookieParser());
 
