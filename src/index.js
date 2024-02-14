@@ -1,12 +1,14 @@
 import './style.scss';
+import Router from './lib/Router/router';
 
-import FormView from './lib/Views/FormView/FormView';
-import FormController from './lib/Controllers/FormController';
-import FormModel from './lib/Models/FormModel';
+const app = document.querySelector('#app');
+const router = new Router();
 
-const formModel = new FormModel();
-const abc = new FormView(formModel);
-abc.controller = new FormController(formModel);
-abc.rootEl = document.querySelector('.form');
-abc.render();
+window.addEventListener('hashchange', () => {
+    const SelectedClass = router.resolveRoute(window.location.hash);
+
+    const view = new SelectedClass();
+    app.innerHTML = '';
+    app.appendChild(view.rootEl);
+});
 
