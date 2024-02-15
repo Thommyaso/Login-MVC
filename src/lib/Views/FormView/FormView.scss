@@ -10,18 +10,6 @@
     height: 400px;
     align-items: center;
 
-    &__login {
-        width: 180px;
-        display: block;
-        margin-bottom: 15px;
-    }
-
-    &__password {
-        width: 180px;
-        display: block;
-        margin-bottom: 15px;
-    }
-
     &__btnContainer {
         display: flex;
         flex-direction:row;

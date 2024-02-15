@@ -2,6 +2,8 @@ import './FormView.scss';
 import AbstractView from '../../Abstracts/view';
 import FormController from '../../Controllers/FormController';
 import FormModel from '../../Models/FormModel';
+import Input from '../../Components/Input/Input';
+import Button from '../../Components/Button/Button';
 
 class FormView extends AbstractView {
     constructor(model) {
@@ -9,30 +11,10 @@ class FormView extends AbstractView {
 
         this.model = new FormModel();
         this.controller = new FormController(this.model);
-        this.loginField = null;
-        this.passwordField = null;
-        this.submitBtn = null;
+        this.loginField = Input.createInput({mode: 'text'});
+        this.passwordField = Input.createInput({mode: 'password'});
+        this.submitBtn = Button.createBtn({mode: 'submit'});
         this.render();
-    }
-
-    renderElement(el, classString, type) {
-        const element = document.createElement(el);
-        element.className = classString;
-        element.type = type;
-        return element;
-    }
-
-    renderRoot() {
-        const div = document.createElement('div');
-        div.className = 'form';
-        div.appendChild(this.loginField);
-        div.appendChild(this.passwordField);
-        div.appendChild(this.submitBtn);
-        return div;
-    }
-
-    _renderLogin() {
-        console.log(this.model.properties);
     }
 
     _submitForm() {
@@ -42,6 +24,10 @@ class FormView extends AbstractView {
         this.controller.handleLoginData(data);
     }
 
+    _renderLogin() {
+        console.log(this.model.properties);
+    }
+
     _setEventListener() {
         this.submitBtn.addEventListener('click', (event) => {
             event.preventDefault();
@@ -49,13 +35,25 @@ class FormView extends AbstractView {
         });
     }
 
+    _renderBtnContainer() {
+        const div = document.createElement('div');
+        div.className = 'form__btnContainer';
+        div.appendChild(this.submitBtn);
+        return div;
+    }
+
+    _renderRoot() {
+        const div = document.createElement('div');
+        div.className = 'form';
+        div.appendChild(this.loginField);
+        div.appendChild(this.passwordField);
+        div.appendChild(this._renderBtnContainer());
+        return div;
+    }
+
     render() {
-        this.loginField = this.renderElement('input', 'form__login', 'text');
-        this.passwordField = this.renderElement('input', 'form__password', 'password');
-        this.submitBtn = this.renderElement('button', 'form__submitBtn', 'submit');
-        this.submitBtn.innerText = 'submit';
         this._setEventListener();
-        this.rootEl = this.renderRoot();
+        this.rootEl = this._renderRoot();
         this.model.addObserver('login', this._renderLogin.bind(this));
     }
 }
