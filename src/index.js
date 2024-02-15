@@ -1,14 +1,8 @@
 import './style.scss';
-import Router from './lib/Router/router';
+import RouterModel from './lib/Models/RouterModel';
+import Page from './lib/Views/App';
 
-const app = document.querySelector('#app');
-const router = new Router();
+const routerModel = new RouterModel();
+const page = new Page(routerModel);
 
-window.addEventListener('hashchange', () => {
-    const SelectedClass = router.resolveRoute(window.location.hash);
-
-    const view = new SelectedClass();
-    app.innerHTML = '';
-    app.appendChild(view.rootEl);
-});
-
+page.initialize();

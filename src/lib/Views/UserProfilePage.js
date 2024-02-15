@@ -1,6 +1,6 @@
-import AbstractView from '../../Abstracts/view';
+import AbstractView from '../Abstracts/view';
 
-class PageNotFoundView extends AbstractView {
+class UserProfilePage extends AbstractView {
     constructor(model) {
         super(model);
         this.rootEl = this.render();
@@ -8,9 +8,9 @@ class PageNotFoundView extends AbstractView {
 
     render() {
         const h = document.createElement('h1');
-        h.innerText = 'PAGE NOT FOUND';
+        h.innerText = 'HI YOU SUCCESFULLY LOGGED IN!';
         return h;
     }
 }
 
-export default PageNotFoundView;
+export default UserProfilePage;

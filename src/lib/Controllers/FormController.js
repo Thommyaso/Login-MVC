@@ -11,12 +11,15 @@ class FormController extends AbstractController {
         // server request needs to be set up here
         this.service.login(data)
             .then((res) => {
+                this.model.set('authorised', true);
+                this.model.fireEvent('loginUpdate', '#/userprofile');
                 console.log(res);
             })
             .catch((res) => {
+                this.model.set('authorised', false);
+                this.model.fireEvent('loginUpdate', '#/userprofile');
                 console.log(res);
             });
-        // console.log(data);
     }
 
     updateModel(data) {

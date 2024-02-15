@@ -1,6 +1,6 @@
-import AbstractView from '../../Abstracts/view';
+import AbstractView from '../Abstracts/view';
 
-class ForbiddenPageView extends AbstractView {
+class ForbiddenPage extends AbstractView {
     constructor(model) {
         super(model);
         this.rootEl = this.render();
@@ -13,4 +13,4 @@ class ForbiddenPageView extends AbstractView {
     }
 }
 
-export default ForbiddenPageView;
+export default ForbiddenPage;

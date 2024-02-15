@@ -1,10 +1,10 @@
 import AbstractModel from '../Abstracts/model';
 
-class FormModel extends AbstractModel {
+class RouterModel extends AbstractModel {
     constructor() {
         super();
         this.properties = {
-            loggedIn: false,
+            authorised: false,
             loginDetails: {
                 name: null,
                 surname: null,
@@ -12,9 +12,9 @@ class FormModel extends AbstractModel {
         };
     }
 
-    setLogin() {
-        this.properties.loggedIn = !this.properties.loggedIn;
+    updateLoginStatus() {
+        this.properties.authorised = !this.properties.authorised;
     }
 }
 
-export default FormModel;
+export default RouterModel;

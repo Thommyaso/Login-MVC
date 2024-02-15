@@ -1,15 +1,12 @@
-import './FormView.scss';
-import AbstractView from '../../Abstracts/view';
-import FormController from '../../Controllers/FormController';
-import FormModel from '../../Models/FormModel';
-import Input from '../../Components/Input/Input';
-import Button from '../../Components/Button/Button';
+import AbstractView from '../Abstracts/view';
+import FormController from '../Controllers/FormController';
+import Input from '../Components/Input/Input';
+import Button from '../Components/Button/Button';
 
-class FormView extends AbstractView {
+class LogInForm extends AbstractView {
     constructor(model) {
         super(model);
 
-        this.model = new FormModel();
         this.controller = new FormController(this.model);
         this.loginField = Input.createInput({mode: 'text'});
         this.passwordField = Input.createInput({mode: 'password'});
@@ -44,7 +41,7 @@ class FormView extends AbstractView {
 
     _renderRoot() {
         const div = document.createElement('div');
-        div.className = 'form';
+        div.className = 'logInForm';
         div.appendChild(this.loginField);
         div.appendChild(this.passwordField);
         div.appendChild(this._renderBtnContainer());
@@ -58,4 +55,4 @@ class FormView extends AbstractView {
     }
 }
 
-export default FormView;
+export default LogInForm;

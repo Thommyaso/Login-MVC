@@ -5,9 +5,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-const users = new Map([
-    ['Thomas', 'abc012'],
-]);
+const users = [
+    {
+        id: '001',
+        login: 'Thomas',
+        password: 'abc012',
+    },
+];
 
 app.use(
     session({
@@ -40,13 +44,15 @@ app.get('/login', function (__req, res) {
 
 app.post('/login', function (req, res) {
     console.log(req.body);
-    if (users.has(req.body.login)) {
-        const storedPassword = users.get(req.body.login);
+    const user = users.find((user) => user.login === req.body.login);
+
+    if (user) {
+        const storedPassword = user.password;
 
         if (storedPassword === req.body.password) {
             res.status(200);
             res.cookie('name', 'Thomas'/* , {maxAge: 3600000, httpOnly: true} */);
-            res.send(true);
+            res.send();
             return;
         }
     }
