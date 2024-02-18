@@ -2,27 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 
 const users = [
     {
         id: '001',
         login: 'Thomas',
-        password: 'abc012',
+        password: 'abc012', // never store unhashed, unsalted password on the server, this is just an example for development
     },
 ];
-
-app.use(
-    session({
-        secret: 'not a good secret',
-        cookie: {},
-        resave: false,
-        saveUninitialized: false,
-    }),
-);
-
-app.use(cookieParser());
 
 app.use((__req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -38,10 +25,6 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-app.get('/login', function (__req, res) {
-    res.cookie('sky', 'blue');
-});
-
 app.post('/login', function (req, res) {
     console.log(req.body);
     const user = users.find((user) => user.login === req.body.login);
@@ -51,7 +34,7 @@ app.post('/login', function (req, res) {
 
         if (storedPassword === req.body.password) {
             res.status(200);
-            res.cookie('name', 'Thomas'/* , {maxAge: 3600000, httpOnly: true} */);
+            res.cookie('MVC-LogInApp', 'aaaa000111');
             res.send();
             return;
         }

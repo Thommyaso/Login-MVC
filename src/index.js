@@ -1,8 +1,6 @@
 import './style.scss';
-import RouterModel from './lib/Models/RouterModel';
-import Page from './lib/Views/App';
+import Router from './lib/Router/Router';
 
-const routerModel = new RouterModel();
-const page = new Page(routerModel);
+const router = new Router();
 
-page.initialize();
+router.resolveRoute(window.location.hash);

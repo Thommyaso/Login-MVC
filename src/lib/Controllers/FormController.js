@@ -11,13 +11,11 @@ class FormController extends AbstractController {
         // server request needs to be set up here
         this.service.login(data)
             .then((res) => {
-                this.model.set('authorised', true);
-                this.model.fireEvent('loginUpdate', '#/userprofile');
+                window.location.hash = '#/userprofile';
                 console.log(res);
             })
             .catch((res) => {
-                this.model.set('authorised', false);
-                this.model.fireEvent('loginUpdate', '#/userprofile');
+                console.log('wrong password or login');
                 console.log(res);
             });
     }
@@ -28,8 +26,6 @@ class FormController extends AbstractController {
             name: data.name,
             surname: data.surname,
         });
-        this.model.setLogin();
-        this.model.fireEvent('login');
     }
 }
 

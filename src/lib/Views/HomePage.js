@@ -1,18 +1,16 @@
 import AbstractView from '../Abstracts/view';
 
-class UserProfilePage extends AbstractView {
+class HomePage extends AbstractView {
     constructor(model) {
         super(model);
         this.rootEl = this.render();
-
-        history.replaceState(null, null, '#/userprofile');
     }
 
     render() {
         const h = document.createElement('h1');
-        h.innerText = 'HI YOU SUCCESFULLY LOGGED IN!';
+        h.innerText = 'Welcome to home page';
         return h;
     }
 }
 
-export default UserProfilePage;
+export default HomePage;

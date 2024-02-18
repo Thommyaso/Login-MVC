@@ -2,12 +2,23 @@ import LogInForm from '../Views/LogInForm';
 import ForbiddenPage from '../Views/ForbiddenPage';
 import PageNotFound from '../Views/PageNotFound';
 import UserProfilePage from '../Views/UserProfilePage';
+import Cookies from 'js-cookie';
+import BaseInfoModel from '../Models/BaseInfoModel';
+import HomePage from '../Views/HomePage';
 
 class Router {
-    constructor(model) {
-        this.model = model;
+    constructor() {
+        this.rootEl = document.querySelector('#app');
+        this.model = new BaseInfoModel();
         this.NOT_PROTECTED = true;
         this.routes = [
+            {
+                path: '',
+                middleware: () => {
+                    return this.NOT_PROTECTED;
+                },
+                component: HomePage,
+            },
             {
                 path: '#/login',
                 middleware: () => {
@@ -32,24 +43,44 @@ class Router {
             {
                 path: '#/userprofile',
                 middleware: () => {
-                    return this.model.get('authorised');
+                    return this.authorised();
                 },
                 component: UserProfilePage,
             },
         ];
+
+        window.addEventListener('hashchange', () => {
+            this.resolveRoute(window.location.hash);
+        });
+    }
+
+    authorised() {
+        if (Cookies.get('MVC-LogInApp')) {
+            return true;
+        }
+        return false;
     }
 
     resolveRoute(path) {
         const route = this.routes.find((route) => route.path === path);
 
         if (route) {
-            console.log(route.middleware());
-            if ((route.middleware(this.model))) {
-                return route.component;
+            if ((route.middleware())) {
+                this.render(route.component);
+                return;
             }
-            return ForbiddenPage;
+            window.location.hash = '#/forbidden';
+            return;
         }
-        return PageNotFound;
+        window.location.hash = '#/pagenotfound';
+        return;
+    }
+
+    render(SelectedClass) {
+        const view = new SelectedClass(this.model);
+
+        this.rootEl.innerHTML = '';
+        this.rootEl.appendChild(view.rootEl);
     }
 }
 
