@@ -1,5 +1,5 @@
 import AbstractView from '../Abstracts/view';
-import FormController from '../Controllers/FormController';
+import LogInFormController from '../Controllers/LogInFormController';
 import Input from '../Components/Input/Input';
 import Button from '../Components/Button/Button';
 
@@ -7,11 +7,10 @@ class LogInForm extends AbstractView {
     constructor(model) {
         super(model);
 
-        this.controller = new FormController(this.model);
+        this.controller = new LogInFormController(this.model);
         this.loginField = Input.createInput({mode: 'text'});
         this.passwordField = Input.createInput({mode: 'password'});
         this.submitBtn = Button.createBtn({mode: 'logIn'});
-        this.render();
     }
 
     _submitForm() {
@@ -19,10 +18,6 @@ class LogInForm extends AbstractView {
         data.login = this.loginField.value;
         data.password = this.passwordField.value;
         this.controller.handleLoginData(data);
-    }
-
-    _renderLogin() {
-        console.log(this.model.properties);
     }
 
     _setEventListener() {
@@ -51,7 +46,6 @@ class LogInForm extends AbstractView {
     render() {
         this._setEventListener();
         this.rootEl = this._renderRoot();
-        this.model.addObserver('login', this._renderLogin.bind(this));
     }
 }
 

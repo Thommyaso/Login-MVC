@@ -1,9 +1,8 @@
-import LogInForm from '../Views/LogInForm';
+import LogInPage from '../Views/LogInPage';
 import ForbiddenPage from '../Views/ForbiddenPage';
 import PageNotFound from '../Views/PageNotFound';
 import UserProfilePage from '../Views/UserProfilePage';
 import Cookies from 'js-cookie';
-import BaseInfoModel from '../Models/BaseInfoModel';
 import HomePage from '../Views/HomePage';
 import Navigation from '../Components/Navigation/Navigation';
 import LogOutPage from '../Views/LogOutPage';
@@ -13,7 +12,6 @@ class Router {
         this.rootEl = document.querySelector('#app');
         this.nav = null;
         this.appBody = null;
-        this.model = new BaseInfoModel();
         this.NOT_PROTECTED = true;
         this.routes = [
             {
@@ -28,7 +26,7 @@ class Router {
                 middleware: () => {
                     return this.NOT_PROTECTED;
                 },
-                component: LogInForm,
+                component: LogInPage,
             },
             {
                 path: '#/forbidden',
@@ -99,10 +97,11 @@ class Router {
         return;
     }
 
-    render(SelectedClass) {
-        const view = new SelectedClass(this.model);
+    async render(SelectedClass) {
+        const view = new SelectedClass();
 
         this.appBody.innerHTML = '';
+        await view.render();
         this.appBody.appendChild(view.rootEl);
     }
 }

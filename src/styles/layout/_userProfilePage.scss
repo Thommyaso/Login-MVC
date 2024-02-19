@@ -1,0 +1,28 @@
+.userInfo {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 18.25rem;
+    border: 1px solid black;
+    margin-top: 10vh;
+    height: 10rem;
+
+    &__Container {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    &__label {
+        width: fit-content;
+        margin-right: 0.5rem;
+    }
+
+    &__value {
+        width: fit-content;
+    }
+}

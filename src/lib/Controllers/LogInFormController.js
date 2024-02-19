@@ -1,14 +1,13 @@
 import AbstractController from '../Abstracts/controller';
-import Service from '../Services/Service';
+import LogInFormService from '../Services/LogInFormService';
 
-class FormController extends AbstractController {
+class LogInFormController extends AbstractController {
     constructor(model) {
         super(model);
-        this.service = new Service();
+        this.service = new LogInFormService();
     }
 
     handleLoginData(data) {
-        // server request needs to be set up here
         this.service.login(data)
             .then((res) => {
                 window.location.hash = '#/userprofile';
@@ -19,14 +18,6 @@ class FormController extends AbstractController {
                 console.log(res);
             });
     }
-
-    updateModel(data) {
-        // data from server will be used to set up model
-        this.model.set('loginDetails', {
-            name: data.name,
-            surname: data.surname,
-        });
-    }
 }
 
-export default FormController;
+export default LogInFormController;

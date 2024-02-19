@@ -6,12 +6,10 @@ class LogOutPage extends AbstractView {
     constructor(model) {
         super(model);
         this.btn = Button.createBtn({mode: 'logOut'});
-        console.log(this.btn);
         this.btn.rootEl.addEventListener('click', () => {
             Cookies.remove('MVC-LogInApp');
             window.location.hash = '';
         });
-        this.rootEl = this.render();
     }
 
     render() {
@@ -23,7 +21,7 @@ class LogOutPage extends AbstractView {
         h.innerText = 'Would you like to log out?';
         div.appendChild(h);
         div.appendChild(this.btn.rootEl);
-        return div;
+        this.rootEl = div;
     }
 }
 

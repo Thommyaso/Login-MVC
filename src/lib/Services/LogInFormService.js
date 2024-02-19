@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-class Service {
+class LogInFormService {
     constructor() {
         this.baseUrl = 'http://localhost:3000/login/';
     }
@@ -12,4 +12,4 @@ class Service {
     }
 }
 
-export default Service;
+export default LogInFormService;
