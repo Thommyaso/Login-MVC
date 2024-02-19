@@ -10,7 +10,8 @@ class UserProfilePage extends AbstractView {
 
     render() {
         const h = document.createElement('h1');
-        h.innerText = 'HI YOU SUCCESFULLY LOGGED IN!';
+        h.classList.add('basicPage__header');
+        h.innerText = 'Hi, you succesfully logged in!';
         return h;
     }
 }

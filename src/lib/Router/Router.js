@@ -5,10 +5,14 @@ import UserProfilePage from '../Views/UserProfilePage';
 import Cookies from 'js-cookie';
 import BaseInfoModel from '../Models/BaseInfoModel';
 import HomePage from '../Views/HomePage';
+import Navigation from '../Components/Navigation/Navigation';
+import LogOutPage from '../Views/LogOutPage';
 
 class Router {
     constructor() {
         this.rootEl = document.querySelector('#app');
+        this.nav = null;
+        this.appBody = null;
         this.model = new BaseInfoModel();
         this.NOT_PROTECTED = true;
         this.routes = [
@@ -47,11 +51,30 @@ class Router {
                 },
                 component: UserProfilePage,
             },
+            {
+                path: '#/logout',
+                middleware: () => {
+                    return this.NOT_PROTECTED;
+                },
+                component: LogOutPage,
+            },
         ];
 
+        this.renderApp();
+
         window.addEventListener('hashchange', () => {
+            this.nav.renderButtons();
             this.resolveRoute(window.location.hash);
         });
+    }
+
+    renderApp() {
+        this.nav = (Navigation.createNav());
+        this.rootEl.prepend(this.nav.rootEl);
+
+        this.appBody = document.createElement('div');
+        this.appBody.classList.add('appBody');
+        this.rootEl.appendChild(this.appBody);
     }
 
     authorised() {
@@ -79,8 +102,8 @@ class Router {
     render(SelectedClass) {
         const view = new SelectedClass(this.model);
 
-        this.rootEl.innerHTML = '';
-        this.rootEl.appendChild(view.rootEl);
+        this.appBody.innerHTML = '';
+        this.appBody.appendChild(view.rootEl);
     }
 }
 

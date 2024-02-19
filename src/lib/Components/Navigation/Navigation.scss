@@ -1,0 +1,9 @@
+.nav {
+    background-color: rgb(253, 246, 235);
+    margin-bottom: 3rem;
+
+    &__container{
+        display: flex;
+        justify-content: center;
+    }
+}

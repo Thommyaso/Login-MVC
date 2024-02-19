@@ -10,7 +10,7 @@ class LogInForm extends AbstractView {
         this.controller = new FormController(this.model);
         this.loginField = Input.createInput({mode: 'text'});
         this.passwordField = Input.createInput({mode: 'password'});
-        this.submitBtn = Button.createBtn({mode: 'submit'});
+        this.submitBtn = Button.createBtn({mode: 'logIn'});
         this.render();
     }
 
@@ -26,7 +26,7 @@ class LogInForm extends AbstractView {
     }
 
     _setEventListener() {
-        this.submitBtn.addEventListener('click', (event) => {
+        this.submitBtn.rootEl.addEventListener('click', (event) => {
             event.preventDefault();
             this._submitForm();
         });
@@ -34,8 +34,8 @@ class LogInForm extends AbstractView {
 
     _renderBtnContainer() {
         const div = document.createElement('div');
-        div.className = 'form__btnContainer';
-        div.appendChild(this.submitBtn);
+        div.className = 'logInForm__btnContainer';
+        div.appendChild(this.submitBtn.rootEl);
         return div;
     }
 

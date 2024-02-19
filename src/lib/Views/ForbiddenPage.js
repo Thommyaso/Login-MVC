@@ -8,7 +8,8 @@ class ForbiddenPage extends AbstractView {
 
     render() {
         const h = document.createElement('h1');
-        h.innerText = 'UNAUTHORISED ';
+        h.classList.add('basicPage__header');
+        h.innerText = 'Unauthorised';
         return h;
     }
 }

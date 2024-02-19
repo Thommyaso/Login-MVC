@@ -8,7 +8,8 @@ class PageNotFound extends AbstractView {
 
     render() {
         const h = document.createElement('h1');
-        h.innerText = 'PAGE NOT FOUND';
+        h.classList.add('basicPage__header');
+        h.innerText = 'Page not found';
         return h;
     }
 }
