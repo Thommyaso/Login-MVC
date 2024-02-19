@@ -33,6 +33,7 @@ class UserProfilePage extends AbstractView {
         await this.controller.initialize()
             .then(() => {
                 const containerDiv = document.createElement('div');
+
                 containerDiv.classList.add('userInfo');
                 containerDiv.appendChild(this.renderInfo('name'));
                 containerDiv.appendChild(this.renderInfo('surname'));

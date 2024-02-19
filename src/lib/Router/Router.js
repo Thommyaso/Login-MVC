@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import HomePage from '../Views/HomePage';
 import Navigation from '../Components/Navigation/Navigation';
 import LogOutPage from '../Views/LogOutPage';
+import RegisterPage from '../Views/RegisterPage';
 
 class Router {
     constructor() {
@@ -55,6 +56,13 @@ class Router {
                     return this.NOT_PROTECTED;
                 },
                 component: LogOutPage,
+            },
+            {
+                path: '#/register',
+                middleware: () => {
+                    return this.NOT_PROTECTED;
+                },
+                component: RegisterPage,
             },
         ];
 

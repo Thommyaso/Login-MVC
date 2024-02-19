@@ -8,14 +8,21 @@ class LogInForm extends AbstractView {
         super(model);
 
         this.controller = new LogInFormController(this.model);
-        this.loginField = Input.createInput({mode: 'text'});
+        this.usernameField = Input.createInput({mode: 'text'});
         this.passwordField = Input.createInput({mode: 'password'});
         this.submitBtn = Button.createBtn({mode: 'logIn'});
+    }
+    _createLabel(text) {
+        const label = document.createElement('label');
+
+        label.classList.add('logInForm__label');
+        label.innerText = text;
+        return label;
     }
 
     _submitForm() {
         const data = {};
-        data.login = this.loginField.value;
+        data.username = this.usernameField.value;
         data.password = this.passwordField.value;
         this.controller.handleLoginData(data);
     }
@@ -37,9 +44,13 @@ class LogInForm extends AbstractView {
     _renderRoot() {
         const div = document.createElement('div');
         div.className = 'logInForm';
-        div.appendChild(this.loginField);
-        div.appendChild(this.passwordField);
-        div.appendChild(this._renderBtnContainer());
+        div.append(
+            this._createLabel('Username'),
+            this.usernameField,
+            this._createLabel('Password'),
+            this.passwordField,
+            this._renderBtnContainer(),
+        );
         return div;
     }
 

@@ -34,9 +34,13 @@ class Navigation extends AbstractView {
     authorised() {
         if (Cookies.get('MVC-LogInApp')) {
             this.buttons[2] = Button.createBtn({mode: 'navLink', type: 'logOut'});
+            if (this.buttons.length === 4) {
+                this.buttons.splice(3, 1);
+            }
             return;
         }
         this.buttons[2] = Button.createBtn({mode: 'navLink', type: 'logIn'});
+        this.buttons[3] = (Button.createBtn({mode: 'navLink', type: 'register'}));
     }
 
     renderButtons() {

@@ -17,6 +17,9 @@ class Button extends AbstractView {
         } else if (mode === 'logOut') {
             this.rootEl.innerText = 'Log Out';
             this.rootEl.classList.add('btn__primary');
+        } else if (mode === 'submit') {
+            this.rootEl.innerText = 'Submit';
+            this.rootEl.classList.add('btn__primary');
         } else if (mode === 'navLink') {
             this.rootEl.classList.add('btn__navLink');
             switch (type) {
@@ -35,6 +38,10 @@ class Button extends AbstractView {
                 case 'userProfile':
                     this.rootEl.innerText = 'User Profile';
                     this.hash = '#/userprofile';
+                    break;
+                case 'register':
+                    this.rootEl.innerText = 'Register';
+                    this.hash = '#/register';
                     break;
                 default:
                     console.log('button doesn\'t exist');
