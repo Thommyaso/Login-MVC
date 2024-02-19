@@ -17,11 +17,11 @@ class RegisterPage extends AbstractView {
 
         this.submitBtn.rootEl.addEventListener('click', (event) => {
             event.preventDefault();
-            this.handleSubmitClick();
+            this._handleSubmitClick();
         });
     }
 
-    createLabel(text) {
+    _createLabel(text) {
         const label = document.createElement('label');
 
         label.classList.add('form__label');
@@ -29,38 +29,29 @@ class RegisterPage extends AbstractView {
         return label;
     }
 
-    createForm() {
+    _createForm() {
         const form = document.createElement('form');
 
         form.classList.add('form__container');
         form.append(
-            this.createLabel('Name'),
+            this._createLabel('Name'),
             this.nameInput,
-            this.createLabel('Surname'),
+            this._createLabel('Surname'),
             this.surnameInput,
-            this.createLabel('Age'),
+            this._createLabel('Age'),
             this.ageInput,
-            this.createLabel('Username'),
+            this._createLabel('Username'),
             this.usernameInput,
-            this.createLabel('Password'),
+            this._createLabel('Password'),
             this.passwordInput,
-            this.createLabel('Repeat Password'),
+            this._createLabel('Repeat Password'),
             this.repeatPasswordInput,
             this.submitBtn.rootEl,
         );
         return form;
     }
 
-    setUpBtn() {
-        const btn = Button.createBtn({mode: 'submit'});
-
-        btn.rootEl.addEventListener('click', () => {
-            this.handleSubmitClick();
-        });
-        return btn.rootEl;
-    }
-
-    handleSubmitClick() {
+    _handleSubmitClick() {
         if (this.passwordInput.value === this.repeatPasswordInput.value) {
             const user = {
                 name: this.nameInput.value,
@@ -77,7 +68,7 @@ class RegisterPage extends AbstractView {
     render() {
         this.rootEl = document.createElement('div');
         this.rootEl.classList.add('form');
-        this.rootEl.appendChild(this.createForm());
+        this.rootEl.appendChild(this._createForm());
     }
 }
 

@@ -46,7 +46,7 @@ class Router {
             {
                 path: '#/userprofile',
                 middleware: () => {
-                    return this.authorised();
+                    return this._authorised();
                 },
                 component: UserProfilePage,
             },
@@ -66,7 +66,7 @@ class Router {
             },
         ];
 
-        this.renderApp();
+        this._renderApp();
 
         window.addEventListener('hashchange', () => {
             this.nav.renderButtons();
@@ -74,7 +74,7 @@ class Router {
         });
     }
 
-    renderApp() {
+    _renderApp() {
         this.nav = (Navigation.createNav());
         this.rootEl.prepend(this.nav.rootEl);
 
@@ -83,7 +83,7 @@ class Router {
         this.rootEl.appendChild(this.appBody);
     }
 
-    authorised() {
+    _authorised() {
         if (Cookies.get('MVC-LogInApp')) {
             return true;
         }

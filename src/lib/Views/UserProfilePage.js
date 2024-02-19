@@ -11,7 +11,7 @@ class UserProfilePage extends AbstractView {
         history.replaceState(null, null, '#/userprofile');
     }
 
-    renderInfo(type) {
+    _renderInfo(type) {
         const nameDiv = document.createElement('div');
         const label = document.createElement('h4');
         const value = document.createElement('h3');
@@ -24,8 +24,10 @@ class UserProfilePage extends AbstractView {
         value.classList.add('userInfo__value');
         value.innerText = this.model.get(type);
 
-        nameDiv.appendChild(label);
-        nameDiv.appendChild(value);
+        nameDiv.append(
+            label,
+            value,
+        );
         return nameDiv;
     }
 
@@ -35,12 +37,13 @@ class UserProfilePage extends AbstractView {
                 const containerDiv = document.createElement('div');
 
                 containerDiv.classList.add('userInfo');
-                containerDiv.appendChild(this.renderInfo('name'));
-                containerDiv.appendChild(this.renderInfo('surname'));
-                containerDiv.appendChild(this.renderInfo('age'));
+                containerDiv.append(
+                    this._renderInfo('name'),
+                    this._renderInfo('surname'),
+                    this._renderInfo('age'),
+                );
                 this.rootEl = containerDiv;
             });
-
     }
 }
 
