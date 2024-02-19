@@ -9,9 +9,8 @@ class LogInFormController extends AbstractController {
 
     handleLoginData(data) {
         this.service.login(data)
-            .then((res) => {
+            .then(() => {
                 window.location.hash = '#/userprofile';
-                console.log(res);
             })
             .catch((res) => {
                 console.log('wrong password or login');

@@ -1,8 +1,9 @@
 import axios from 'axios';
+import config from './config';
 
 class RegisterFormService {
     constructor() {
-        this.baseUrl = 'http://localhost:3000/register';
+        this.baseUrl = `${config.url}register`;
     }
 
     async register(data) {

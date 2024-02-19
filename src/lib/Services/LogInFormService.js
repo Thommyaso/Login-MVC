@@ -1,8 +1,9 @@
 import axios from 'axios';
+import config from './config';
 
 class LogInFormService {
     constructor() {
-        this.baseUrl = 'http://localhost:3000/login/';
+        this.baseUrl = `${config.url}login`;
     }
 
     async login(data) {

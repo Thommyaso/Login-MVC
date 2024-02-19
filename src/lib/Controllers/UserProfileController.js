@@ -11,11 +11,10 @@ class UserProfileController extends AbstractController {
     async initialize() {
         await this.service.retriveData()
             .then((res) => {
-                console.log(res);
                 this.model.handleData(res.data);
             })
-            .catch(() => {
-                console.log('error');
+            .catch((error) => {
+                console.log(error);
                 Cookies.remove('MVC-LogInApp');
                 window.location.hash = '#/login';
             });

@@ -4,6 +4,13 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
 const {v4: uuidv4} = require('uuid');
+require('dotenv').config();
+
+const config = {
+    appUrl: process.env.APP_URL ? process.env.APP_URL : 'http://localhost:9000',
+};
+
+console.log(config.appUrl);
 
 const users = [
     {
@@ -28,7 +35,7 @@ app.use((__req, res, next) => {
 });
 
 app.use(cors({
-    origin: 'http://localhost:9000',
+    origin: config.appUrl,
     credentials: true,
 }));
 

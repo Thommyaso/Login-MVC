@@ -1,8 +1,9 @@
 import axios from 'axios';
+import config from './config';
 
 class UserProfileService {
     constructor() {
-        this.baseUrl = 'http://localhost:3000/userprofile/';
+        this.baseUrl = `${config.url}userprofile`;
     }
 
     async retriveData() {
