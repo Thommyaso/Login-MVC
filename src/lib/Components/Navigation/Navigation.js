@@ -6,61 +6,87 @@ import Cookies from 'js-cookie';
 class Navigation extends AbstractView {
     constructor(model) {
         super(model);
-        this.nav = this.createNavContainer();
+
+        this.rootEl = this._setupRoot();
         this.buttons = [
             Button.createBtn({mode: 'navLink', type: 'home'}),
             Button.createBtn({mode: 'navLink', type: 'userProfile'}),
-            null,
         ];
-        this.rootEl = document.createElement('div');
-        this.rootEl.classList.add('nav');
+        this.formButtons = [];
+        this.navContainer = this._createNavigationContainer();
+        this.logInContainer = this._renderFormContainer();
     }
 
-    createNavContainer() {
+    _createNavigationContainer() {
         const nav = document.createElement('div');
-        nav.classList.add('nav__container');
+
+        nav.classList.add('container-fluid');
+        nav.append(this._renderNavigationList());
         return nav;
     }
 
-    setEventListener() {
-        this.rootEl.addEventListener('click', () => {
-            if (window.location.hash !== this.hash) {
-                window.location.hash = this.hash;
-                return;
-            }
-        });
-    }
-
-    authorised() {
+    _loginStatus() {
+        this.logInContainer.innerHTML = '';
         if (Cookies.get('MVC-LogInApp')) {
-            this.buttons[2] = Button.createBtn({mode: 'navLink', type: 'logOut'});
-            if (this.buttons.length === 4) {
-                this.buttons.splice(3, 1);
-            }
+            this.formButtons = [Button.createBtn({mode: 'navLink', type: 'logOut'})];
             return;
         }
-        this.buttons[2] = Button.createBtn({mode: 'navLink', type: 'logIn'});
-        this.buttons[3] = (Button.createBtn({mode: 'navLink', type: 'register'}));
+        this.formButtons = [
+            Button.createBtn({mode: 'navLink', type: 'logIn'}),
+            Button.createBtn({mode: 'navLink', type: 'register'}),
+        ];
     }
 
-    renderButtons() {
-        this.nav.innerHTML = '';
-        this.authorised();
+    _renderFormContainer() {
+        const form = document.createElement('form');
+
+        form.classList.add('container-fluid', 'justify-content-space-evenly', 'custom-container');
+        return form;
+    }
+
+    _setupRoot() {
+        const navbar = document.createElement('nav');
+
+        navbar.classList.add('navbar', 'navbar-expand', 'bg-body-tertiary', 'navbar-custom');
+        return navbar;
+    }
+
+    _renderNavigationList() {
+        const container = document.createElement('div');
+
+        container.classList.add('navbar-nav');
+        container.innerHTML = '';
+
         this.buttons.forEach((button) => {
             button.rootEl.addEventListener('click', () => {
                 if (window.location.hash !== button.hash) {
                     window.location.hash = button.hash;
                 }
             });
-            this.nav.appendChild(button.rootEl);
+            container.appendChild(button.rootEl);
         });
-        this.rootEl.appendChild(this.nav);
+        return container;
+
+    }
+
+    renderFormButtons() {
+        this._loginStatus();
+        this.formButtons.forEach((button) => {
+            button.rootEl.addEventListener('click', () => {
+                if (window.location.hash !== button.hash) {
+                    window.location.hash = button.hash;
+                }
+            });
+            this.logInContainer.append(button.rootEl);
+        });
     }
 
     static createNav() {
-        const nav = new Navigation();
-        nav.renderButtons();
-        return nav;
+        const navBar = new Navigation();
+
+        navBar.renderFormButtons();
+        navBar.rootEl.append(navBar.navContainer, navBar.logInContainer);
+        return navBar;
     }
 }
 

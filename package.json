@@ -54,7 +54,9 @@
     "webpack-spritesmith": "1.1.0"
   },
   "dependencies": {
+    "@popperjs/core": "2.11.8",
     "axios": "1.6.7",
+    "bootstrap": "5.3.2",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "express-session": "1.18.0",

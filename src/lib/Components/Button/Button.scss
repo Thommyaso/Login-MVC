@@ -1,18 +1,3 @@
-.btn {
-
-    &__primary {
-        padding: 0.1rem 0.3rem;
-        width: fit-content;
-        height: fit-content;
-    }
-
-    &__navLink {
-        all: unset;
-        padding: 0.5rem 1rem;
-        border-radius: 0.4rem;
-
-        &:hover{
-            background-color: rgba(231, 231, 231, 0.699);
-        }
-    }
+.navBtn-custom {
+    margin-right: 0.3rem;
 }

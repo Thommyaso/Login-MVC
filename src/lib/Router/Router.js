@@ -69,7 +69,7 @@ class Router {
         this._renderApp();
 
         window.addEventListener('hashchange', () => {
-            this.nav.renderButtons();
+            this.nav.renderFormButtons();
             this.resolveRoute(window.location.hash);
         });
     }
@@ -77,7 +77,6 @@ class Router {
     _renderApp() {
         this.nav = (Navigation.createNav());
         this.rootEl.prepend(this.nav.rootEl);
-
         this.appBody = document.createElement('div');
         this.appBody.classList.add('appBody');
         this.rootEl.appendChild(this.appBody);
@@ -107,7 +106,6 @@ class Router {
 
     async render(SelectedClass) {
         const view = new SelectedClass();
-
         this.appBody.innerHTML = '';
         await view.render();
         this.appBody.appendChild(view.rootEl);

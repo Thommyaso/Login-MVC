@@ -1,3 +1,5 @@
+import '../src/style.scss';
+
 /** @type { import('@storybook/html').Preview } */
 const preview = {
   parameters: {
