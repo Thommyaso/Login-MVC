@@ -45,9 +45,9 @@ app.post('/login', function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-
         if (user.password === req.body.password) {
             const generateId = uuidv4();
+
             user.id = generateId;
             res.status(200);
             res.cookie('MVC-LogInApp', generateId);
@@ -62,6 +62,7 @@ app.post('/login', function (req, res) {
 app.post('/userprofile', function (req, res) {
     const accessCookie = req.cookies['MVC-LogInApp'];
     const user = users.find((user) => user.id === accessCookie);
+
     if (user) {
         res.status(200);
         res.send(user.userInfo);
@@ -73,6 +74,7 @@ app.post('/userprofile', function (req, res) {
 
 app.post('/register', function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
+
     if (user) {
         res.status(409);
         res.send();
@@ -89,6 +91,7 @@ app.post('/register', function (req, res) {
             age: req.body.age,
         },
     };
+
     users.push(newUser);
     console.log(users);
     res.status(200);
