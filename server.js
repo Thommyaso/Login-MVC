@@ -5,20 +5,43 @@ const app = express();
 const cors = require('cors');
 const {v4: uuidv4} = require('uuid');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 
 const config = {
     appUrl: process.env.APP_URL ? process.env.APP_URL : 'http://localhost:9000',
 };
 
+const hashPassword = async (pw) => {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(pw, salt);
+    return hash;
+};
+
+const logIn = async (pw, hashedPw) => {
+    const result = await bcrypt.compare(pw, hashedPw);
+    return result;
+};
+
 const users = [
-    {
-        id: '512c9dfa-7489-4e48-a439-b25ce1f376f6',
-        username: 'Thomas',
-        password: 'abc012', // never store unhashed, unsalted password on the server, this is just an example for development
-        name: 'Thomas',
-        surname: 'James',
-        age: 28,
-    },
+    /*
+
+    Users will be added here.
+    Each user will be stored as an individual object.
+    Sotred passwords will be hashed and salted using bcrypt
+    Example:
+
+        {
+            id: 'f4db803b-cdcd-4f28-833d-3936c7925700',
+            username: 'Jesse01',
+            password: '$2b$10$phdxe7Pr2ZrDRK7N/rOfvuStYLmSqggQ1upagGIv2.B7S3od13NK.',
+            name: 'Jesse',
+            surname: 'James',
+            age: 28
+        },
+
+    Id changes each time cookie is generated.
+
+    */
 ];
 
 app.use(cookieParser());
@@ -37,11 +60,11 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-app.post('/login', function (req, res) {
+app.post('/login', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        if (user.password === req.body.password) {
+        if (await logIn(req.body.password, user.password)) {
             const generateId = uuidv4();
 
             user.id = generateId;
@@ -73,7 +96,7 @@ app.post('/userprofile', function (req, res) {
     res.send();
 });
 
-app.post('/register', function (req, res) {
+app.post('/register', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
@@ -81,18 +104,18 @@ app.post('/register', function (req, res) {
         res.send();
         return;
     }
+
     const generateId = uuidv4();
     const newUser = {
         id: generateId,
         username: req.body.username,
-        password: req.body.password,
+        password: await hashPassword(req.body.password),
         name: req.body.name,
         surname: req.body.surname,
         age: req.body.age,
     };
 
     users.push(newUser);
-    console.log(users);
     res.status(200);
     res.cookie('MVC-LogInApp', generateId);
     res.send();
