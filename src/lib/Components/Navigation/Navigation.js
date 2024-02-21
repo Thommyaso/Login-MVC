@@ -69,7 +69,7 @@ class Navigation extends AbstractView {
 
     }
 
-    _renderFormButtons() {
+    renderFormButtons() {
         this._loginStatus();
         this.formButtons.forEach((button) => {
             button.rootEl.addEventListener('click', () => {
@@ -84,7 +84,7 @@ class Navigation extends AbstractView {
     static createNav() {
         const navBar = new Navigation();
 
-        navBar._renderFormButtons();
+        navBar.renderFormButtons();
         navBar.rootEl.append(navBar.navContainer, navBar.logInContainer);
         return navBar;
     }
