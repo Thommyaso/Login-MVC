@@ -1,13 +1,14 @@
 .logInForm{
+    background-color: rgb(240, 240, 240);
+    border-radius: 1rem;
+    padding: 4rem;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10vh;
-    border: 1px solid black;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 18.25rem;
-    height: 25rem;
+    max-width: 24rem;
     align-items: center;
 
     &__label {
@@ -18,6 +19,6 @@
         display: flex;
         flex-direction:row;
         justify-content: end;
-        width: 180px;
+        width: 250px;
     }
 }

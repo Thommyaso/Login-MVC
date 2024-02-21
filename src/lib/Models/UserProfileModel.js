@@ -5,6 +5,7 @@ class UserProfileModel extends AbstractModel {
         super();
         this.properties = {
             name: null,
+            username: null,
             surname: null,
             age: null,
         };
@@ -12,6 +13,7 @@ class UserProfileModel extends AbstractModel {
 
     handleData(data) {
         this.set('name', data.name);
+        this.set('username', data.username);
         this.set('surname', data.surname);
         this.set('age', data.age);
     }

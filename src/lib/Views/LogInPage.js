@@ -8,10 +8,27 @@ class LogInForm extends AbstractView {
         super(model);
 
         this.controller = new LogInFormController(this.model);
-        this.usernameField = Input.createInput({mode: 'text'});
-        this.passwordField = Input.createInput({mode: 'password'});
+        this.usernameField = Input.createFloatingInput({
+            id: 'floatingLogInInput',
+            labelText: 'Username',
+            inputType: 'text',
+        });
+        this.passwordField = Input.createFloatingInput({
+            id: 'floatingLogInPassword',
+            labelText: 'Password',
+            inputType: 'password',
+        });
         this.submitBtn = Button.createBtn({mode: 'logIn'});
     }
+
+    _renderHeader() {
+        const header = document.createElement('h1');
+
+        header.classList.add('h3', 'mb-3', 'fw-normal');
+        header.innerText = 'Please sign in:';
+        return header;
+    }
+
     _createLabel(text) {
         const label = document.createElement('label');
 
@@ -22,8 +39,9 @@ class LogInForm extends AbstractView {
 
     _submitForm() {
         const data = {};
-        data.username = this.usernameField.value;
-        data.password = this.passwordField.value;
+
+        data.username = this.usernameField.input.value;
+        data.password = this.passwordField.input.value;
         this.controller.handleLoginData(data);
     }
 
@@ -36,6 +54,7 @@ class LogInForm extends AbstractView {
 
     _renderBtnContainer() {
         const div = document.createElement('div');
+
         div.className = 'logInForm__btnContainer';
         div.appendChild(this.submitBtn.rootEl);
         return div;
@@ -43,12 +62,12 @@ class LogInForm extends AbstractView {
 
     _renderRoot() {
         const div = document.createElement('div');
-        div.className = 'logInForm';
+
+        div.classList.add('container-fluid', 'logInForm');
         div.append(
-            this._createLabel('Username'),
-            this.usernameField,
-            this._createLabel('Password'),
-            this.passwordField,
+            this._renderHeader(),
+            this.usernameField.rootEl,
+            this.passwordField.rootEl,
             this._renderBtnContainer(),
         );
         return div;

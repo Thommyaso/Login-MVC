@@ -28,7 +28,21 @@ export const Submit = {
     },
 };
 
-export const NavigationButton = {
+export const NavigationLogInButton = {
+    args: {
+        mode: 'navLink',
+        type: 'logIn',
+    },
+};
+
+export const NavigationLogOutButton = {
+    args: {
+        mode: 'navLink',
+        type: 'logOut',
+    },
+};
+
+export const NavigationLinkButton = {
     args: {
         mode: 'navLink',
         type: 'userProfile',

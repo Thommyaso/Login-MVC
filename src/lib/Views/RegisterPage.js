@@ -7,12 +7,36 @@ class RegisterPage extends AbstractView {
     constructor(model) {
         super(model);
         this.controller = new RegisterFormController(this.model);
-        this.nameInput = Input.createInput({mode: 'text'});
-        this.surnameInput = Input.createInput({mode: 'text'});
-        this.usernameInput = Input.createInput({mode: 'text'});
-        this.ageInput = Input.createInput({mode: 'number'});
-        this.passwordInput = Input.createInput({mode: 'password'});
-        this.repeatPasswordInput = Input.createInput({mode: 'password'});
+        this.nameInput = Input.createRegularInput({
+            id: 'RegularNameInput',
+            labelText: 'Name:',
+            inputType: 'text',
+        });
+        this.surnameInput = Input.createRegularInput({
+            id: 'RegularSurnameInput',
+            labelText: 'Surname:',
+            inputType: 'text',
+        });
+        this.usernameInput = Input.createRegularInput({
+            id: 'RegularUsernameInput',
+            labelText: 'Username:',
+            inputType: 'text',
+        });
+        this.ageInput = Input.createRegularInput({
+            id: 'RegularAgeInput',
+            labelText: 'Age:',
+            inputType: 'number',
+        });
+        this.passwordInput = Input.createRegularInput({
+            id: 'RegularPasswordInput',
+            labelText: 'Password:',
+            inputType: 'password',
+        });
+        this.repeatPasswordInput = Input.createRegularInput({
+            id: 'RegularRepeatPasswordInput',
+            labelText: 'Repeat Password:',
+            inputType: 'password',
+        });
         this.submitBtn = Button.createBtn({mode: 'submit'});
 
         this.submitBtn.rootEl.addEventListener('click', (event) => {
@@ -21,54 +45,51 @@ class RegisterPage extends AbstractView {
         });
     }
 
-    _createLabel(text) {
-        const label = document.createElement('label');
+    _renderHeader() {
+        const header = document.createElement('h1');
 
-        label.classList.add('form__label');
-        label.innerText = text;
-        return label;
+        header.classList.add('h3', 'mb-3', 'fw-normal', 'header-custom');
+        header.innerText = 'Please register:';
+        return header;
     }
 
     _createForm() {
         const form = document.createElement('form');
+        const container = document.createElement('div');
 
-        form.classList.add('form__container');
-        form.append(
-            this._createLabel('Name'),
-            this.nameInput,
-            this._createLabel('Surname'),
-            this.surnameInput,
-            this._createLabel('Age'),
-            this.ageInput,
-            this._createLabel('Username'),
-            this.usernameInput,
-            this._createLabel('Password'),
-            this.passwordInput,
-            this._createLabel('Repeat Password'),
-            this.repeatPasswordInput,
+        container.classList.add('formInputContainer');
+        container.append(
+            this._renderHeader(),
+            this.nameInput.rootEl,
+            this.surnameInput.rootEl,
+            this.ageInput.rootEl,
+            this.usernameInput.rootEl,
+            this.passwordInput.rootEl,
+            this.repeatPasswordInput.rootEl,
             this.submitBtn.rootEl,
         );
+
+        form.classList.add('container-fluid', 'formContainer-custom');
+        form.append(container);
         return form;
     }
 
     _handleSubmitClick() {
         if (this.passwordInput.value === this.repeatPasswordInput.value) {
-            const user = {
-                name: this.nameInput.value,
-                surname: this.surnameInput.value,
-                age: this.ageInput.value,
-                username: this.usernameInput.value,
-                password: this.passwordInput.value,
-            };
 
+            const user = {
+                name: this.nameInput.input.value,
+                surname: this.surnameInput.input.value,
+                age: this.ageInput.input.value,
+                username: this.usernameInput.input.value,
+                password: this.passwordInput.input.value,
+            };
             this.controller.handleRegistrationData(user);
         }
     }
 
     render() {
-        this.rootEl = document.createElement('div');
-        this.rootEl.classList.add('form');
-        this.rootEl.appendChild(this._createForm());
+        this.rootEl = this._createForm();
     }
 }
 

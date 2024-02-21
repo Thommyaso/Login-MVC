@@ -2,11 +2,11 @@ import LogInPage from '../Views/LogInPage';
 import ForbiddenPage from '../Views/ForbiddenPage';
 import PageNotFound from '../Views/PageNotFound';
 import UserProfilePage from '../Views/UserProfilePage';
-import Cookies from 'js-cookie';
 import HomePage from '../Views/HomePage';
 import Navigation from '../Components/Navigation/Navigation';
 import LogOutPage from '../Views/LogOutPage';
 import RegisterPage from '../Views/RegisterPage';
+import Cookies from 'js-cookie';
 
 class Router {
     constructor() {

@@ -11,22 +11,35 @@ class UserProfilePage extends AbstractView {
         history.replaceState(null, null, '#/userprofile');
     }
 
+    _renderHeader() {
+        const header = document.createElement('h1');
+        header.classList.add('h3', 'mb-3', 'fw-normal', 'header-custom');
+        header.innerText = `Hi ${this.model.get('username')}, here are your details:`;
+        return header;
+    }
+
     _renderInfo(type) {
         const nameDiv = document.createElement('div');
-        const label = document.createElement('h4');
-        const value = document.createElement('h3');
+        const label = document.createElement('div');
+        const input = document.createElement('div');
+        const header = document.createElement('h5');
+        const paragraph = document.createElement('h5');
 
-        nameDiv.classList.add('userInfo__Container');
+        paragraph.innerText = `${type}:`;
+        paragraph.classList.add('userPage__p');
 
-        label.classList.add('userInfo__label');
-        label.innerText = `${type}:`;
+        header.innerText = this.model.get(type);
 
-        value.classList.add('userInfo__value');
-        value.innerText = this.model.get(type);
+        label.append(paragraph);
+        label.classList.add('userPage__label');
 
+        input.append(header);
+        input.classList.add('userPage__input');
+
+        nameDiv.classList.add('userPage__info');
         nameDiv.append(
             label,
-            value,
+            input,
         );
         return nameDiv;
     }
@@ -38,6 +51,7 @@ class UserProfilePage extends AbstractView {
 
                 containerDiv.classList.add('userInfo');
                 containerDiv.append(
+                    this._renderHeader(),
                     this._renderInfo('name'),
                     this._renderInfo('surname'),
                     this._renderInfo('age'),

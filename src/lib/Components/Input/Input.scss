@@ -1,13 +1,8 @@
-.input {
-    &__text, &__number {
-        width: 180px;
-        display: block;
-        margin-bottom: 15px;
-    }
-
-    &__password {
-        width: 180px;
-        display: block;
-        margin-bottom: 15px;
-    }
+.input-width-custom{
+   width: 250px;
 }
+
+.label-custom {
+   margin-right: 0.3rem;
+}
+

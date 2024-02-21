@@ -8,7 +8,7 @@ class HomePage extends AbstractView {
     render() {
         const h = document.createElement('h1');
         h.classList.add('basicPage__header');
-        h.innerText = 'Welcome to home page';
+        h.innerText = 'Welcome to the home page';
         this.rootEl = h;
     }
 }

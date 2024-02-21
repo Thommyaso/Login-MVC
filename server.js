@@ -10,18 +10,14 @@ const config = {
     appUrl: process.env.APP_URL ? process.env.APP_URL : 'http://localhost:9000',
 };
 
-console.log(config.appUrl);
-
 const users = [
     {
         id: '512c9dfa-7489-4e48-a439-b25ce1f376f6',
         username: 'Thomas',
         password: 'abc012', // never store unhashed, unsalted password on the server, this is just an example for development
-        userInfo: {
-            name: 'Thomas',
-            surname: 'James',
-            age: 28,
-        },
+        name: 'Thomas',
+        surname: 'James',
+        age: 28,
     },
 ];
 
@@ -65,7 +61,12 @@ app.post('/userprofile', function (req, res) {
 
     if (user) {
         res.status(200);
-        res.send(user.userInfo);
+        res.send({
+            name: user.name,
+            surname: user.surname,
+            username: user.username,
+            age: user.age,
+        });
         return;
     }
     res.status(404);
@@ -85,11 +86,9 @@ app.post('/register', function (req, res) {
         id: generateId,
         username: req.body.username,
         password: req.body.password,
-        userInfo: {
-            name: req.body.name,
-            surname: req.body.surname,
-            age: req.body.age,
-        },
+        name: req.body.name,
+        surname: req.body.surname,
+        age: req.body.age,
     };
 
     users.push(newUser);
