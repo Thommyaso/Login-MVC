@@ -1,3 +1,7 @@
 import './style.scss';
+import './bootstrap.scss';
+import Router from './lib/Router/Router';
 
-console.log('works fine!!');
+const router = new Router();
+
+router.resolveRoute(window.location.hash);

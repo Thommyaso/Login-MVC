@@ -1,0 +1,34 @@
+.userInfo {
+    margin-top: 10vh;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    background-color: rgb(240, 240, 240);
+    border-radius: 1rem;
+    padding: 4rem;
+}
+
+.userPage {
+    &__info{
+        display: flex;
+        align-items: center;
+    }
+
+    &__label{
+        margin-right: 0.5rem;
+        display: flex;
+        align-items: center;
+        height: fit-content;
+        width: fit-content;
+    }
+
+    &__input {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+    }
+}
