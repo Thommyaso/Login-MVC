@@ -1,6 +1,5 @@
 import AbstractController from '../Abstracts/controller';
 import UserProfileService from '../Services/UserProfileService';
-import Cookies from 'js-cookie';
 
 class UserProfileController extends AbstractController {
     constructor(model) {
@@ -15,7 +14,7 @@ class UserProfileController extends AbstractController {
             })
             .catch((error) => {
                 console.log(error);
-                Cookies.remove('MVC-LogInApp');
+                window.localStorage.isLoggedIn = false;
                 window.location.hash = '#/login';
             });
     }

@@ -1,14 +1,14 @@
 import AbstractView from '../Abstracts/view';
 import Button from '../Components/Button/Button';
-import Cookies from 'js-cookie';
+import LogOutFormController from '../Controllers/LogOutFormController';
 
 class LogOutPage extends AbstractView {
     constructor(model) {
         super(model);
+        this.controller = new LogOutFormController(this.model);
         this.btn = Button.createBtn({mode: 'logOut'});
         this.btn.rootEl.addEventListener('click', () => {
-            Cookies.remove('MVC-LogInApp');
-            window.location.hash = '';
+            this.controller.handleLogOutClick();
         });
     }
 

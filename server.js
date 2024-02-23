@@ -1,14 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
-const {v4: uuidv4} = require('uuid');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 const config = {
     appUrl: process.env.APP_URL ? process.env.APP_URL : 'http://localhost:9000',
+    sessionSecret: process.env.SESSION_SECRET ? process.env.SESSION_SECRET : 'f4db803b-cdcd-4f28-833d-3936c7925700',
 };
 
 const hashPassword = async (pw) => {
@@ -25,33 +26,30 @@ const logIn = async (pw, hashedPw) => {
 const users = [
     /*
 
-    Users will be added here.
-    Each user will be stored as an individual object.
-    Sotred passwords will be hashed and salted using bcrypt
-    Example:
+        Users will be added here.
+        Each user will be stored as an individual object.
+        Sotred passwords will be hashed and salted using bcrypt
+        Example:
 
-        {
-            id: 'f4db803b-cdcd-4f28-833d-3936c7925700',
-            username: 'Jesse01',
-            password: '$2b$10$phdxe7Pr2ZrDRK7N/rOfvuStYLmSqggQ1upagGIv2.B7S3od13NK.',
-            name: 'Jesse',
-            surname: 'James',
-            age: 28
-        },
-
-    Id changes each time cookie is generated.
+            {
+                username: 'Jesse01',
+                password: '$2b$10$phdxe7Pr2ZrDRK7N/rOfvuStYLmSqggQ1upagGIv2.B7S3od13NK.',
+                name: 'Jesse',
+                surname: 'James',
+                age: 28
+            },
 
     */
 ];
 
 app.use(cookieParser());
 
-app.use((__req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+app.use(session({
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {maxAge: 1000 * 60 * 5},
+}));
 
 app.use(cors({
     origin: config.appUrl,
@@ -64,34 +62,42 @@ app.post('/login', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        if (await logIn(req.body.password, user.password)) {
-            const generateId = uuidv4();
-
-            user.id = generateId;
+        const isMatched = await logIn(req.body.password, user.password);
+        if (isMatched) {
+            req.session.user = {
+                name: user.name,
+                surname: user.surname,
+                username: user.username,
+                age: user.age,
+            };
             res.status(200);
-            res.cookie('MVC-LogInApp', generateId);
             res.send();
             return;
         }
+    } else {
+        res.clearCookie('connect.sid', {path: '/'});
+        res.status(401);
+        res.send();
     }
-    res.status(401).send();
-
 });
 
 app.post('/userprofile', function (req, res) {
-    const accessCookie = req.cookies['MVC-LogInApp'];
-    const user = users.find((user) => user.id === accessCookie);
+    console.log(req.session, 'session');
+    console.log(req.session.user, 'user');
+    if (req.session && req.session.user) {
+        const {name, surname, username, age} = req.session.user;
 
-    if (user) {
         res.status(200);
         res.send({
-            name: user.name,
-            surname: user.surname,
-            username: user.username,
-            age: user.age,
+            name: name,
+            surname: surname,
+            username: username,
+            age: age,
         });
         return;
     }
+
+    res.clearCookie('connect.sid', {path: '/'});
     res.status(404);
     res.send();
 });
@@ -105,9 +111,7 @@ app.post('/register', async function (req, res) {
         return;
     }
 
-    const generateId = uuidv4();
     const newUser = {
-        id: generateId,
         username: req.body.username,
         password: await hashPassword(req.body.password),
         name: req.body.name,
@@ -115,9 +119,17 @@ app.post('/register', async function (req, res) {
         age: req.body.age,
     };
 
+    req.session.user = newUser;
+
     users.push(newUser);
     res.status(200);
-    res.cookie('MVC-LogInApp', generateId);
+    res.send();
+});
+
+app.get('/logout', function (req, res) {
+    req.session.destroy();
+    res.clearCookie('connect.sid', {path: '/'});
+    res.status(200);
     res.send();
 });
 

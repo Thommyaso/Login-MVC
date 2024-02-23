@@ -7,14 +7,22 @@ class LogInFormController extends AbstractController {
         this.service = new LogInFormService();
     }
 
-    handleLoginData(data) {
+    handleLoginData(data, isLoggedIn) {
+        if (isLoggedIn) {
+            console.log('here');
+            window.location.hash = '#/userprofile';
+            return;
+        }
         this.service.login(data)
-            .then(() => {
+            .then((res) => {
+                console.log(res);
+                window.localStorage.isLoggedIn = true;
                 window.location.hash = '#/userprofile';
             })
             .catch((res) => {
+                window.localStorage.isLoggedIn = false;
                 console.log('wrong password or login');
-                console.log(res);
+                console.error(res);
             });
     }
 }

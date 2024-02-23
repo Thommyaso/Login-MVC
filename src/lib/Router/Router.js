@@ -6,7 +6,6 @@ import HomePage from '../Views/HomePage';
 import Navigation from '../Components/Navigation/Navigation';
 import LogOutPage from '../Views/LogOutPage';
 import RegisterPage from '../Views/RegisterPage';
-import Cookies from 'js-cookie';
 
 class Router {
     constructor() {
@@ -14,6 +13,7 @@ class Router {
         this.nav = null;
         this.appBody = null;
         this.NOT_PROTECTED = true;
+
         this.routes = [
             {
                 path: '',
@@ -69,13 +69,13 @@ class Router {
         this._renderApp();
 
         window.addEventListener('hashchange', () => {
-            this.nav.renderFormButtons();
+            this.nav.renderFormButtons(this._authorised());
             this.resolveRoute(window.location.hash);
         });
     }
 
     _renderApp() {
-        this.nav = (Navigation.createNav());
+        this.nav = (Navigation.createNav(this._authorised()));
         this.rootEl.prepend(this.nav.rootEl);
         this.appBody = document.createElement('div');
         this.appBody.classList.add('appBody');
@@ -83,7 +83,7 @@ class Router {
     }
 
     _authorised() {
-        if (Cookies.get('MVC-LogInApp')) {
+        if (window.localStorage.isLoggedIn === 'true') {
             return true;
         }
         return false;
@@ -106,8 +106,9 @@ class Router {
 
     async render(SelectedClass) {
         const view = new SelectedClass();
+
         this.appBody.innerHTML = '';
-        await view.render();
+        await view.render(this._authorised());
         this.appBody.appendChild(view.rootEl);
     }
 }

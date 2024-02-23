@@ -10,9 +10,11 @@ class RegisterFormController extends AbstractController {
     async handleRegistrationData(data) {
         await this.service.register(data)
             .then(() => {
+                window.localStorage.isLoggedIn = true;
                 window.location.hash = '#/userprofile';
             })
             .catch((error) => {
+                window.localStorage.isLoggedIn = false;
                 console.log(error);
             });
     }
