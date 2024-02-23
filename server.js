@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const config = {
     appUrl: process.env.APP_URL ? process.env.APP_URL : 'http://localhost:9000',
     sessionSecret: process.env.SESSION_SECRET ? process.env.SESSION_SECRET : 'f4db803b-cdcd-4f28-833d-3936c7925700',
+    sessionExpiryTime: process.env.SESSION_EXPIRATION_TIME ? parseInt(process.env.SESSION_EXPIRATION_TIME) : 300000,
 };
 
 const hashPassword = async (pw) => {
@@ -48,7 +49,7 @@ app.use(session({
     secret: config.sessionSecret,
     resave: false,
     saveUninitialized: true,
-    cookie: {maxAge: 1000 * 60 * 5},
+    cookie: {maxAge: config.sessionExpiryTime},
 }));
 
 app.use(cors({
@@ -82,8 +83,6 @@ app.post('/login', async function (req, res) {
 });
 
 app.post('/userprofile', function (req, res) {
-    console.log(req.session, 'session');
-    console.log(req.session.user, 'user');
     if (req.session && req.session.user) {
         const {name, surname, username, age} = req.session.user;
 
