@@ -1,20 +1,17 @@
 import AbstractController from '../Abstracts/controller';
-import RegisterFormService from '../Services/RegisterFormService';
+import {register} from '../Service/service';
 
 class RegisterFormController extends AbstractController {
     constructor(model) {
         super(model);
-        this.service = new RegisterFormService();
     }
 
     async handleRegistrationData(data) {
-        await this.service.register(data)
+        await register(data)
             .then(() => {
-                window.localStorage.isLoggedIn = true;
-                window.location.hash = '#/userprofile';
+                window.location.hash = '#/login';
             })
             .catch((error) => {
-                window.localStorage.isLoggedIn = false;
                 console.log(error);
             });
     }

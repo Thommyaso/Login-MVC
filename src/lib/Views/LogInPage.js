@@ -37,19 +37,16 @@ class LogInForm extends AbstractView {
         return label;
     }
 
-    _submitForm(isLoggedIn) {
-        const data = {};
-
-        data.username = this.usernameField.input.value;
-        data.password = this.passwordField.input.value;
-        this.controller.handleLoginData(data, isLoggedIn);
+    _setEventListener() {
+        this.submitBtn.rootEl.addEventListener('click', this._handleSubmitClick.bind(this));
     }
 
-    _setEventListener(isLoggedIn) {
-        this.submitBtn.rootEl.addEventListener('click', (event) => {
-            event.preventDefault();
-            this._submitForm(isLoggedIn);
-        });
+    _handleSubmitClick(event) {
+        event.preventDefault();
+        const data = {};
+        data.username = this.usernameField.input.value;
+        data.password = this.passwordField.input.value;
+        this.controller.handleLoginData(data);
     }
 
     _renderBtnContainer() {
@@ -73,9 +70,15 @@ class LogInForm extends AbstractView {
         return div;
     }
 
-    render(isLoggedIn) {
-        this._setEventListener(isLoggedIn);
+    destroy() {
+        this.submitBtn.rootEl.removeEventListener('click', this._handleSubmitClick.bind(this));
+
+    }
+
+    async render() {
+        this._setEventListener();
         this.rootEl = this._renderRoot();
+        return Promise.resolve();
     }
 }
 

@@ -1,21 +1,14 @@
 import AbstractController from '../Abstracts/controller';
-import LogInFormService from '../Services/LogInFormService';
+import {logIn} from '../Service/service';
 
 class LogInFormController extends AbstractController {
     constructor(model) {
         super(model);
-        this.service = new LogInFormService();
     }
 
-    handleLoginData(data, isLoggedIn) {
-        if (isLoggedIn) {
-            console.log('here');
-            window.location.hash = '#/userprofile';
-            return;
-        }
-        this.service.login(data)
-            .then((res) => {
-                console.log(res);
+    handleLoginData(data) {
+        logIn(data)
+            .then(() => {
                 window.localStorage.isLoggedIn = true;
                 window.location.hash = '#/userprofile';
             })

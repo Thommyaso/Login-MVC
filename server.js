@@ -14,13 +14,13 @@ const config = {
 };
 
 const hashPassword = async (pw) => {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(pw, salt);
+    const salt = await bcrypt.genSalt(10).catch((err) => console.error(err));
+    const hash = await bcrypt.hash(pw, salt).catch((err) => console.error(err));
     return hash;
 };
 
 const logIn = async (pw, hashedPw) => {
-    const result = await bcrypt.compare(pw, hashedPw);
+    const result = await bcrypt.compare(pw, hashedPw).catch((err) => console.log(err));
     return result;
 };
 
@@ -63,7 +63,7 @@ app.post('/login', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        const isMatched = await logIn(req.body.password, user.password);
+        const isMatched = await logIn(req.body.password, user.password).catch((err) => console.log(err));
         if (isMatched) {
             req.session.user = {
                 name: user.name,
@@ -71,14 +71,16 @@ app.post('/login', async function (req, res) {
                 username: user.username,
                 age: user.age,
             };
-            res.status(200);
-            res.send();
+            res
+                .status(200)
+                .send();
             return;
         }
     } else {
-        res.clearCookie('connect.sid', {path: '/'});
-        res.status(401);
-        res.send();
+        res
+            .clearCookie('connect.sid', {path: '/'})
+            .status(401)
+            .send();
     }
 });
 
@@ -86,50 +88,54 @@ app.post('/userprofile', function (req, res) {
     if (req.session && req.session.user) {
         const {name, surname, username, age} = req.session.user;
 
-        res.status(200);
-        res.send({
-            name: name,
-            surname: surname,
-            username: username,
-            age: age,
-        });
+        res.status(200)
+            .send({
+                name: name,
+                surname: surname,
+                username: username,
+                age: age,
+            });
         return;
     }
 
-    res.clearCookie('connect.sid', {path: '/'});
-    res.status(404);
-    res.send();
+    res
+        .clearCookie('connect.sid', {path: '/'})
+        .status(404)
+        .send();
 });
 
 app.post('/register', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        res.status(409);
-        res.send();
+        res.status(409)
+            .send();
         return;
     }
 
+    const hashedPassword = await hashPassword(req.body.password).catch((err) => {
+        console.error(err);
+    });
     const newUser = {
         username: req.body.username,
-        password: await hashPassword(req.body.password),
+        password: hashedPassword,
         name: req.body.name,
         surname: req.body.surname,
         age: req.body.age,
     };
 
-    req.session.user = newUser;
-
     users.push(newUser);
-    res.status(200);
-    res.send();
+    res
+        .status(200)
+        .send();
 });
 
 app.get('/logout', function (req, res) {
     req.session.destroy();
-    res.clearCookie('connect.sid', {path: '/'});
-    res.status(200);
-    res.send();
+    res
+        .clearCookie('connect.sid', {path: '/'})
+        .status(200)
+        .send();
 });
 
 app.listen(3000);

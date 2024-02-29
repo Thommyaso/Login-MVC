@@ -7,12 +7,20 @@ class LogOutPage extends AbstractView {
         super(model);
         this.controller = new LogOutFormController(this.model);
         this.btn = Button.createBtn({mode: 'logOut'});
-        this.btn.rootEl.addEventListener('click', () => {
-            this.controller.handleLogOutClick();
-        });
+        this.btn.rootEl.addEventListener('click', this._handleLogOutClick.bind(this));
     }
 
-    render() {
+    _handleLogOutClick(event) {
+        event.preventDefault();
+        this.controller.handleLogOutClick();
+    }
+
+    destroy() {
+        this.btn.rootEl.removeEventListener('click', this._handleLogOutClick.bind(this));
+
+    }
+
+    async render() {
         const div = document.createElement('div');
         const h = document.createElement('h3');
 
@@ -22,6 +30,7 @@ class LogOutPage extends AbstractView {
         div.appendChild(h);
         div.appendChild(this.btn.rootEl);
         this.rootEl = div;
+        return Promise.resolve();
     }
 }
 

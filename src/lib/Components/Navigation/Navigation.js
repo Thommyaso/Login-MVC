@@ -1,7 +1,6 @@
 import './Navigation.scss';
 import AbstractView from '../../Abstracts/view';
 import Button from '../Button/Button';
-// import Cookies from 'js-cookie';
 
 class Navigation extends AbstractView {
     constructor(model) {
@@ -27,7 +26,7 @@ class Navigation extends AbstractView {
 
     _loginStatus(isLoggedIn) {
         this.logInContainer.innerHTML = '';
-        if (/* Cookies.get('MVC-LogInApp') */isLoggedIn) {
+        if (isLoggedIn) {
             this.formButtons = [Button.createBtn({mode: 'navLink', type: 'logOut'})];
             return;
         }

@@ -44,8 +44,12 @@ class UserProfilePage extends AbstractView {
         return nameDiv;
     }
 
+    destroy() {
+
+    }
+
     async render() {
-        await this.controller.initialize()
+        return await this.controller.initialize()
             .then(() => {
                 const containerDiv = document.createElement('div');
 
@@ -57,6 +61,9 @@ class UserProfilePage extends AbstractView {
                     this._renderInfo('age'),
                 );
                 this.rootEl = containerDiv;
+            })
+            .catch((err) => {
+                console.error(err);
             });
     }
 }
