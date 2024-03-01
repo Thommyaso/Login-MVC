@@ -14,14 +14,37 @@ const config = {
 };
 
 const hashPassword = async (pw) => {
-    const salt = await bcrypt.genSalt(10).catch((err) => console.error(err));
-    const hash = await bcrypt.hash(pw, salt).catch((err) => console.error(err));
-    return hash;
+    let password = null;
+
+    await bcrypt.genSalt(10)
+        .then(async (salt) => {
+            await bcrypt.hash(pw, salt).catch((err) => console.error(err))
+                .then((pass) => {
+                    password = pass;
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    if (password) {
+        return password;
+    }
+    console.error('Failed to generate hashed password');
 };
 
 const logIn = async (pw, hashedPw) => {
-    const result = await bcrypt.compare(pw, hashedPw).catch((err) => console.log(err));
-    return result;
+    return await bcrypt.compare(pw, hashedPw)
+        .then((res) => {
+            return res;
+        })
+        .catch((err) => {
+            console.error(err);
+            console.error('failed to compare passwords');
+            return false;
+        });
 };
 
 const users = [
@@ -63,7 +86,7 @@ app.post('/login', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        const isMatched = await logIn(req.body.password, user.password).catch((err) => console.log(err));
+        const isMatched = await logIn(req.body.password, user.password);
         if (isMatched) {
             req.session.user = {
                 name: user.name,
@@ -113,20 +136,24 @@ app.post('/register', async function (req, res) {
         return;
     }
 
-    const hashedPassword = await hashPassword(req.body.password).catch((err) => {
-        console.error(err);
-    });
-    const newUser = {
-        username: req.body.username,
-        password: hashedPassword,
-        name: req.body.name,
-        surname: req.body.surname,
-        age: req.body.age,
-    };
-
-    users.push(newUser);
+    const hashedPassword = await hashPassword(req.body.password);
+    if (hashedPassword) {
+        const newUser = {
+            username: req.body.username,
+            password: hashedPassword,
+            name: req.body.name,
+            surname: req.body.surname,
+            age: req.body.age,
+        };
+        users.push(newUser);
+        res
+            .status(200)
+            .send();
+        return;
+    }
+    console.error('failed to set up the password');
     res
-        .status(200)
+        .status(500)
         .send();
 });
 
