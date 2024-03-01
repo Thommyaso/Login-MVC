@@ -1,5 +1,6 @@
 import AbstractController from '../Abstracts/controller';
 import {retriveData} from '../Service/service';
+import logger from '../utils/logger';
 
 class UserProfileController extends AbstractController {
     constructor(model) {
@@ -14,7 +15,7 @@ class UserProfileController extends AbstractController {
                 return res;
             })
             .catch((error) => {
-                console.log(error);
+                logger.error(error);
                 window.localStorage.isLoggedIn = false;
                 window.location.hash = '#/login';
                 return error;

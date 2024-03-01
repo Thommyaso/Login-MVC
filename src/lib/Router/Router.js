@@ -6,6 +6,7 @@ import HomePage from '../Views/HomePage';
 import Navigation from '../Components/Navigation/Navigation';
 import LogOutPage from '../Views/LogOutPage';
 import RegisterPage from '../Views/RegisterPage';
+import logger from '../utils/logger';
 
 class Router {
     constructor() {
@@ -112,7 +113,7 @@ class Router {
                 this.appBody.appendChild(this.currentObject.rootEl);
             })
             .catch((err) => {
-                console.error(err);
+                logger.error(err);
             });
     }
 }

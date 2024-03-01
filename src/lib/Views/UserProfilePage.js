@@ -1,6 +1,7 @@
 import AbstractView from '../Abstracts/view';
 import UserProfileController from '../Controllers/UserProfileController';
 import UserProfileModel from '../Models/UserProfileModel';
+import logger from '../utils/logger';
 
 class UserProfilePage extends AbstractView {
     constructor(model) {
@@ -44,10 +45,6 @@ class UserProfilePage extends AbstractView {
         return nameDiv;
     }
 
-    destroy() {
-
-    }
-
     async render() {
         return await this.controller.initialize()
             .then(() => {
@@ -63,7 +60,7 @@ class UserProfilePage extends AbstractView {
                 this.rootEl = containerDiv;
             })
             .catch((err) => {
-                console.error(err);
+                logger.error(err);
             });
     }
 }

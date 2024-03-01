@@ -36,6 +36,10 @@ class AbstractView {
     render() {
         // set up in child class
     }
+
+    destroy() {
+        // set up in child class
+    }
 }
 
 export default AbstractView;

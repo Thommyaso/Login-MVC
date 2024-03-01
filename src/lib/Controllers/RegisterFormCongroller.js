@@ -1,5 +1,6 @@
 import AbstractController from '../Abstracts/controller';
 import {register} from '../Service/service';
+import logger from '../utils/logger';
 
 class RegisterFormController extends AbstractController {
     constructor(model) {
@@ -12,7 +13,7 @@ class RegisterFormController extends AbstractController {
                 window.location.hash = '#/login';
             })
             .catch((error) => {
-                console.log(error);
+                logger.error(error);
             });
     }
 }

@@ -1,5 +1,6 @@
 import AbstractController from '../Abstracts/controller';
 import {logOut} from '../Service/service';
+import logger from '../utils/logger';
 
 class LogOutFormController extends AbstractController {
     constructor(model) {
@@ -12,8 +13,8 @@ class LogOutFormController extends AbstractController {
                 window.localStorage.isLoggedIn = false;
                 window.location.hash = '';
             })
-            .catch((res) => {
-                console.error(res);
+            .catch((err) => {
+                logger.error(err);
             });
     }
 }

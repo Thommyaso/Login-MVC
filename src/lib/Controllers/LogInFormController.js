@@ -1,5 +1,6 @@
 import AbstractController from '../Abstracts/controller';
 import {logIn} from '../Service/service';
+import logger from '../utils/logger';
 
 class LogInFormController extends AbstractController {
     constructor(model) {
@@ -12,10 +13,12 @@ class LogInFormController extends AbstractController {
                 window.localStorage.isLoggedIn = true;
                 window.location.hash = '#/userprofile';
             })
-            .catch((res) => {
+            .catch((err) => {
                 window.localStorage.isLoggedIn = false;
-                console.log('wrong password or login');
-                console.error(res);
+
+                logger.error(err);
+                logger.error('wrong password or login');
+
             });
     }
 }
