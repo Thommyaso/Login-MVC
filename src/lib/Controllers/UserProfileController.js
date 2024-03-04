@@ -1,24 +1,28 @@
 import AbstractController from '../Abstracts/controller';
-import UserProfileService from '../Services/UserProfileService';
-import Cookies from 'js-cookie';
+import {retriveData} from '../Service/service';
+import logger from '../utils/logger';
 
 class UserProfileController extends AbstractController {
     constructor(model) {
         super(model);
-        this.service = new UserProfileService();
     }
 
     async initialize() {
-        await this.service.retriveData()
+
+        return await retriveData()
             .then((res) => {
                 this.model.handleData(res.data);
+                return res;
             })
             .catch((error) => {
-                console.log(error);
-                Cookies.remove('MVC-LogInApp');
+                logger.error(error);
+                window.localStorage.isLoggedIn = false;
                 window.location.hash = '#/login';
+                return error;
             });
     }
+
+
 }
 
 export default UserProfileController;

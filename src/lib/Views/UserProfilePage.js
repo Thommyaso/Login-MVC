@@ -1,6 +1,7 @@
 import AbstractView from '../Abstracts/view';
 import UserProfileController from '../Controllers/UserProfileController';
 import UserProfileModel from '../Models/UserProfileModel';
+import logger from '../utils/logger';
 
 class UserProfilePage extends AbstractView {
     constructor(model) {
@@ -45,7 +46,7 @@ class UserProfilePage extends AbstractView {
     }
 
     async render() {
-        await this.controller.initialize()
+        return await this.controller.initialize()
             .then(() => {
                 const containerDiv = document.createElement('div');
 
@@ -57,6 +58,9 @@ class UserProfilePage extends AbstractView {
                     this._renderInfo('age'),
                 );
                 this.rootEl = containerDiv;
+            })
+            .catch((err) => {
+                logger.error(err);
             });
     }
 }

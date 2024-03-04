@@ -39,10 +39,7 @@ class RegisterPage extends AbstractView {
         });
         this.submitBtn = Button.createBtn({mode: 'submit'});
 
-        this.submitBtn.rootEl.addEventListener('click', (event) => {
-            event.preventDefault();
-            this._handleSubmitClick();
-        });
+        this.submitBtn.rootEl.addEventListener('click', this._handleSubmitClick.bind(this));
     }
 
     _renderHeader() {
@@ -74,7 +71,8 @@ class RegisterPage extends AbstractView {
         return form;
     }
 
-    _handleSubmitClick() {
+    _handleSubmitClick(event) {
+        event.preventDefault();
         if (this.passwordInput.value === this.repeatPasswordInput.value) {
 
             const user = {
@@ -88,8 +86,13 @@ class RegisterPage extends AbstractView {
         }
     }
 
-    render() {
+    destroy() {
+        this.submitBtn.rootEl.removeEventListener('click', this._handleSubmitClick.bind(this));
+    }
+
+    async render() {
         this.rootEl = this._createForm();
+        return Promise.resolve();
     }
 }
 

@@ -1,20 +1,24 @@
 import AbstractController from '../Abstracts/controller';
-import LogInFormService from '../Services/LogInFormService';
+import {logIn} from '../Service/service';
+import logger from '../utils/logger';
 
 class LogInFormController extends AbstractController {
     constructor(model) {
         super(model);
-        this.service = new LogInFormService();
     }
 
     handleLoginData(data) {
-        this.service.login(data)
+        logIn(data)
             .then(() => {
+                window.localStorage.isLoggedIn = true;
                 window.location.hash = '#/userprofile';
             })
-            .catch((res) => {
-                console.log('wrong password or login');
-                console.log(res);
+            .catch((err) => {
+                window.localStorage.isLoggedIn = false;
+
+                logger.error(err);
+                logger.error('wrong password or login');
+
             });
     }
 }

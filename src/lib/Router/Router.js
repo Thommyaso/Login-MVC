@@ -6,7 +6,7 @@ import HomePage from '../Views/HomePage';
 import Navigation from '../Components/Navigation/Navigation';
 import LogOutPage from '../Views/LogOutPage';
 import RegisterPage from '../Views/RegisterPage';
-import Cookies from 'js-cookie';
+import logger from '../utils/logger';
 
 class Router {
     constructor() {
@@ -14,54 +14,57 @@ class Router {
         this.nav = null;
         this.appBody = null;
         this.NOT_PROTECTED = true;
+        this.currentObject = new HomePage();
+
+        /*
+
+            Each route is associated with a specific middleware method that
+            performs checks tailored to the path requirements.
+            If these checks fail, the user will be redirected to the address
+            specified by the 'redirectTo' property within that route object.
+            Routes that do not require any checks have their middleware method
+            set to the 'this.NOT_PROTECTED' flag.
+
+        */
+
         this.routes = [
             {
                 path: '',
-                middleware: () => {
-                    return this.NOT_PROTECTED;
-                },
+                middleware: () => this.NOT_PROTECTED,
                 component: HomePage,
             },
             {
                 path: '#/login',
-                middleware: () => {
-                    return this.NOT_PROTECTED;
-                },
+                redirectTo: '#/userprofile',
+                middleware: () => !(this._authorised()),
                 component: LogInPage,
             },
             {
                 path: '#/forbidden',
-                middleware: () => {
-                    return this.NOT_PROTECTED;
-                },
+                middleware: () => this.NOT_PROTECTED,
                 component: ForbiddenPage,
             },
             {
                 path: '#/pagenotfound',
-                middleware: () => {
-                    return this.NOT_PROTECTED;
-                },
+                middleware: () => this.NOT_PROTECTED,
                 component: PageNotFound,
             },
             {
                 path: '#/userprofile',
-                middleware: () => {
-                    return this._authorised();
-                },
+                redirectTo: '#/forbidden',
+                middleware: () => this._authorised(),
                 component: UserProfilePage,
             },
             {
                 path: '#/logout',
-                middleware: () => {
-                    return this.NOT_PROTECTED;
-                },
+                redirectTo: '#/login',
+                middleware: () => this._authorised(),
                 component: LogOutPage,
             },
             {
                 path: '#/register',
-                middleware: () => {
-                    return this.NOT_PROTECTED;
-                },
+                redirectTo: '#/userprofile',
+                middleware: () => !(this._authorised()),
                 component: RegisterPage,
             },
         ];
@@ -69,13 +72,13 @@ class Router {
         this._renderApp();
 
         window.addEventListener('hashchange', () => {
-            this.nav.renderFormButtons();
+            this.nav.renderFormButtons(this._authorised());
             this.resolveRoute(window.location.hash);
         });
     }
 
     _renderApp() {
-        this.nav = (Navigation.createNav());
+        this.nav = (Navigation.createNav(this._authorised()));
         this.rootEl.prepend(this.nav.rootEl);
         this.appBody = document.createElement('div');
         this.appBody.classList.add('appBody');
@@ -83,32 +86,35 @@ class Router {
     }
 
     _authorised() {
-        if (Cookies.get('MVC-LogInApp')) {
-            return true;
-        }
-        return false;
+        return window.localStorage.isLoggedIn === 'true';
     }
 
     resolveRoute(path) {
         const route = this.routes.find((route) => route.path === path);
-
         if (route) {
             if ((route.middleware())) {
                 this.render(route.component);
                 return;
             }
-            window.location.hash = '#/forbidden';
+            window.location.hash = route.redirectTo;
             return;
         }
         window.location.hash = '#/pagenotfound';
-        return;
     }
 
     async render(SelectedClass) {
-        const view = new SelectedClass();
+        this.currentObject.destroy();
+        this.currentObject = new SelectedClass();
+
+
         this.appBody.innerHTML = '';
-        await view.render();
-        this.appBody.appendChild(view.rootEl);
+        await this.currentObject.render()
+            .then(() => {
+                this.appBody.appendChild(this.currentObject.rootEl);
+            })
+            .catch((err) => {
+                logger.error(err);
+            });
     }
 }
 

@@ -3,6 +3,11 @@ const common = require('./webpack.common');
 const {merge} = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const paths = require('./paths');
+require('dotenv').config();
+
+const config = {
+    devServerPort: process.env.WEBPACK_DEV_SERVER_PORT ? parseInt(process.env.WEBPACK_DEV_SERVER_PORT) : 9000,
+};
 
 module.exports = merge(common, {
     mode: 'development',
@@ -24,7 +29,7 @@ module.exports = merge(common, {
                 paths.main.watchHtml,
             ],
         },
-        port: 9000,
+        port: config.devServerPort,
     },
     module: {
         rules: [

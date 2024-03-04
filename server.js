@@ -1,34 +1,79 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
-const {v4: uuidv4} = require('uuid');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 const config = {
     appUrl: process.env.APP_URL ? process.env.APP_URL : 'http://localhost:9000',
+    sessionSecret: process.env.SESSION_SECRET ? process.env.SESSION_SECRET : 'f4db803b-cdcd-4f28-833d-3936c7925700',
+    sessionExpiryTime: process.env.SESSION_EXPIRATION_TIME ? parseInt(process.env.SESSION_EXPIRATION_TIME) : 300000,
+};
+
+const hashPassword = async (pw) => {
+    let password = null;
+
+    await bcrypt.genSalt(10)
+        .then(async (salt) => {
+            await bcrypt.hash(pw, salt).catch((err) => console.error(err))
+                .then((pass) => {
+                    password = pass;
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    if (password) {
+        return password;
+    }
+    console.error('Failed to generate hashed password');
+};
+
+const logIn = async (pw, hashedPw) => {
+    return await bcrypt.compare(pw, hashedPw)
+        .then((res) => {
+            return res;
+        })
+        .catch((err) => {
+            console.error(err);
+            console.error('failed to compare passwords');
+            return false;
+        });
 };
 
 const users = [
-    {
-        id: '512c9dfa-7489-4e48-a439-b25ce1f376f6',
-        username: 'Thomas',
-        password: 'abc012', // never store unhashed, unsalted password on the server, this is just an example for development
-        name: 'Thomas',
-        surname: 'James',
-        age: 28,
-    },
+    /*
+
+        Users will be added here.
+        Each user will be stored as an individual object.
+        Sotred passwords will be hashed and salted using bcrypt
+        Example:
+
+            {
+                username: 'Jesse01',
+                password: '$2b$10$phdxe7Pr2ZrDRK7N/rOfvuStYLmSqggQ1upagGIv2.B7S3od13NK.',
+                name: 'Jesse',
+                surname: 'James',
+                age: 28
+            },
+
+    */
 ];
 
 app.use(cookieParser());
 
-app.use((__req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+app.use(session({
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {maxAge: config.sessionExpiryTime},
+}));
 
 app.use(cors({
     origin: config.appUrl,
@@ -37,65 +82,87 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-app.post('/login', function (req, res) {
+app.post('/login', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        if (user.password === req.body.password) {
-            const generateId = uuidv4();
-
-            user.id = generateId;
-            res.status(200);
-            res.cookie('MVC-LogInApp', generateId);
-            res.send();
+        const isMatched = await logIn(req.body.password, user.password);
+        if (isMatched) {
+            req.session.user = {
+                name: user.name,
+                surname: user.surname,
+                username: user.username,
+                age: user.age,
+            };
+            res
+                .status(200)
+                .send();
             return;
         }
+    } else {
+        res
+            .clearCookie('connect.sid', {path: '/'})
+            .status(401)
+            .send();
     }
-    res.status(401).send();
-
 });
 
 app.post('/userprofile', function (req, res) {
-    const accessCookie = req.cookies['MVC-LogInApp'];
-    const user = users.find((user) => user.id === accessCookie);
+    if (req.session && req.session.user) {
+        const {name, surname, username, age} = req.session.user;
 
-    if (user) {
-        res.status(200);
-        res.send({
-            name: user.name,
-            surname: user.surname,
-            username: user.username,
-            age: user.age,
-        });
+        res.status(200)
+            .send({
+                name: name,
+                surname: surname,
+                username: username,
+                age: age,
+            });
         return;
     }
-    res.status(404);
-    res.send();
+
+    res
+        .clearCookie('connect.sid', {path: '/'})
+        .status(404)
+        .send();
 });
 
-app.post('/register', function (req, res) {
+app.post('/register', async function (req, res) {
     const user = users.find((user) => user.username === req.body.username);
 
     if (user) {
-        res.status(409);
-        res.send();
+        res.status(409)
+            .send();
         return;
     }
-    const generateId = uuidv4();
-    const newUser = {
-        id: generateId,
-        username: req.body.username,
-        password: req.body.password,
-        name: req.body.name,
-        surname: req.body.surname,
-        age: req.body.age,
-    };
 
-    users.push(newUser);
-    console.log(users);
-    res.status(200);
-    res.cookie('MVC-LogInApp', generateId);
-    res.send();
+    const hashedPassword = await hashPassword(req.body.password);
+    if (hashedPassword) {
+        const newUser = {
+            username: req.body.username,
+            password: hashedPassword,
+            name: req.body.name,
+            surname: req.body.surname,
+            age: req.body.age,
+        };
+        users.push(newUser);
+        res
+            .status(200)
+            .send();
+        return;
+    }
+    console.error('failed to set up the password');
+    res
+        .status(500)
+        .send();
+});
+
+app.get('/logout', function (req, res) {
+    req.session.destroy();
+    res
+        .clearCookie('connect.sid', {path: '/'})
+        .status(200)
+        .send();
 });
 
 app.listen(3000);

@@ -37,19 +37,16 @@ class LogInForm extends AbstractView {
         return label;
     }
 
-    _submitForm() {
-        const data = {};
+    _setEventListener() {
+        this.submitBtn.rootEl.addEventListener('click', this._handleSubmitClick.bind(this));
+    }
 
+    _handleSubmitClick(event) {
+        event.preventDefault();
+        const data = {};
         data.username = this.usernameField.input.value;
         data.password = this.passwordField.input.value;
         this.controller.handleLoginData(data);
-    }
-
-    _setEventListener() {
-        this.submitBtn.rootEl.addEventListener('click', (event) => {
-            event.preventDefault();
-            this._submitForm();
-        });
     }
 
     _renderBtnContainer() {
@@ -61,7 +58,7 @@ class LogInForm extends AbstractView {
     }
 
     _renderRoot() {
-        const div = document.createElement('div');
+        const div = document.createElement('form');
 
         div.classList.add('container-fluid', 'logInForm');
         div.append(
@@ -73,9 +70,15 @@ class LogInForm extends AbstractView {
         return div;
     }
 
-    render() {
+    destroy() {
+        this.submitBtn.rootEl.removeEventListener('click', this._handleSubmitClick.bind(this));
+
+    }
+
+    async render() {
         this._setEventListener();
         this.rootEl = this._renderRoot();
+        return Promise.resolve();
     }
 }
 
