@@ -1,5 +1,4 @@
 # LOGIN-MVC
-
 ## Introduction
  > **This project utilizes a .env file to manage environment variables. This app is set up to run with default values if .env file is not configured. You can change enviroment variables to suit your needs. This README explains how to do it and what variables to include**
 
@@ -58,3 +57,4 @@ Open terminal and navigate to root directory of the project. Run:
 ```sh
 npm run build
 ```
+Files will be compiled into the 'dist' folder
